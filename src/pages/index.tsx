@@ -1,7 +1,8 @@
-import type { NextPage } from "next";
+// import type { NextPage } from "next";
 import Head from "next/head";
+import { prisma } from "../db/client";
 
-const Home: NextPage = () => {
+export default function Home(props: any) {
   return (
     <>
       <Head>
@@ -11,9 +12,18 @@ const Home: NextPage = () => {
       </Head>
       <main className="w-full h-full">
         <h1 className="text-2xl font-bold">Test!!!</h1>
+        <code>{props.games}</code>
       </main>
     </>
   );
-};
+}
 
-export default Home;
+export const getServerSideProps = async () => {
+  const games = await prisma.game.findMany();
+
+  return {
+    props: {
+      games: JSON.stringify(games),
+    },
+  };
+};
